@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+
+		<canvas id="myChart" width="1000" height="3000"></canvas>
+
+		<span id="labels" style="display:none"><%= labels %></span>
+		<span id="counts" style="display:none"><%= counts %></span>
+
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+		<script>
+		var importedLabels = document.getElementById("labels").textContent;
+		var importedLabelsArray = importedLabels.split(',');
+		var importedCounts = document.getElementById("counts").textContent;
+		var ctx = document.getElementById("myChart").getContext('2d');
+
+		function getRandomColor() {
+		  var letters = '0123456789ABCDEF';
+		  var color = '#';
+		  for (var i = 0; i < 6; i++) {
+		    color += letters[Math.floor(Math.random() * 16)];
+		  }
+		  return color;
+		}
+		
+		var backgroundColors = [];
+		for (var i = 0; i < importedLabelsArray.length; i++) {
+			backgroundColors.push(getRandomColor())
+		}
+		var myChart = new Chart(ctx, {
+		    type: 'horizontalBar',
+		    data: {
+		        labels: importedLabelsArray,
+		        datasets: [{
+		            label: '# of Mentions',
+		            data: importedCounts.split(','),
+		            backgroundColor: backgroundColors,
+		            borderColor: ['#F9F9F9'],
+		            borderWidth: 1
+		        }]
+		    },
+		    options: {
+		        scales: {
+		            yAxes: [{
+		                ticks: {
+		                    beginAtZero:true
+		                }
+		            }]
+		        }
+		    }
+		});
+		</script>
+  </body>
+</html>
